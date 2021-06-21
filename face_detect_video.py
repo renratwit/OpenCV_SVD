@@ -5,8 +5,6 @@ face_cascade = cv2.CascadeClassifier('HS.xml')
 
 # To capture video from webcam.
 cap = cv2.VideoCapture(0)
-# To use a video file as input
-# cap = cv2.VideoCapture('filename.mp4')
 
 #KNOWN WIDTH OF BOX = ~16in
 def distance_from_camera(known_width, focal_length, per_width ):
@@ -15,6 +13,12 @@ def distance_from_camera(known_width, focal_length, per_width ):
 KNOWN_WIDTH = 16.0
 KNOWN_DISTANCE = 25.0
 
+def get_distance_from_faces(frame, faces):
+    for (x, y, w, h) in faces:
+        for (x2, y2, w2, h2) in faces:
+            cv2.line(frame, (x, y), (x2, y2), (100, 100, 0), 2)
+    return 0
+
 while True:
     # Read the frame
     _, img = cap.read()
@@ -22,6 +26,7 @@ while True:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # Detect the faces
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    get_distance_from_faces(img, faces)
     # Draw the rectangle around each face
     x_value = 0
     y_value = 0

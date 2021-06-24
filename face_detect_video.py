@@ -6,8 +6,6 @@ face_cascade = cv2.CascadeClassifier('HS.xml')
 
 # To capture video from webcam.
 cap = cv2.VideoCapture(0)
-# To use a video file as input
-# cap = cv2.VideoCapture('filename.mp4')
 
 # KNOWN WIDTH OF BOX = ~16in
 
@@ -18,12 +16,16 @@ def distance_from_camera(known_width, focal_length, per_width):
 
 KNOWN_WIDTH = 16.0
 KNOWN_DISTANCE = 25.0
+
+F = (350 * 29) / 16
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 
 def get_distance_from_faces(frame, faces):
     for (x, y, w, h) in faces:
         for (x2, y2, w2, h2) in faces:
+
+            cv2.line(frame, (x, y), (x2, y2), (100, 100, 0), 2)
             # draw lines
             if (x == x2 and y == y2):
                 continue
@@ -48,6 +50,7 @@ while True:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # Detect the faces
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    get_distance_from_faces(img, faces)
     # Draw the rectangle around each face
     x_value = 0
     y_value = 0
@@ -55,16 +58,17 @@ while True:
         focal_length = float(w) * float(KNOWN_DISTANCE) / float(KNOWN_WIDTH)
         cv2.rectangle(img, (x, y), (x+w, y+h), (100, 100, 0), 2)
         # est_dist = distance_from_camera(KNOWN_WIDTH, focal_length, float(w))
-        est_dist = round(1 / (KNOWN_WIDTH * KNOWN_DISTANCE) / w, 2)
-        print("EST - " + str(est_dist))
-        # print("WIDTH ", w)
-        # cv2.putText(img,
-        #             str(est_dist),
-        #             (x, y),
-        #             font, 1,
-        #             (0, 255, 255),
-        #             2,
-        #             cv2.LINE_4)
+        est_dist = round((16 * F) / w, 2)
+        #print("EST - " + str(est_dist))
+        print("WIDTH ", w)
+        cv2.putText(img,
+                    str(est_dist),
+                    (x, y),
+                    font, 1,
+                    (0, 255, 255),
+                    2,
+                    cv2.LINE_4)
+
 
     # Display
     cv2.imshow('img', img)

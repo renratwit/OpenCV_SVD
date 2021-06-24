@@ -5,7 +5,7 @@ import math
 # face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 face_cascade = cv2.CascadeClassifier('HS.xml')
 # Read the input image
-img = cv2.imread('couple.jpg')
+img = cv2.imread('couple2.jpg')
 # Convert into grayscale
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -21,11 +21,12 @@ def draw_lines(frame, faces):
             # print("CENTER 1 " + str(center_1))
             # print("CENTER 2 " + str(center_2))
             dis = math.sqrt((x-x2)**2 + (y-y2)**2)
-            print("DISTANCE = " + str(dis))
+            inches = (dis / w2) * 16
+            print("DISTANCE = " + str(inches))
             cv2.line(frame, center_1, center_2, (0, 0, 255), 2)
     return 0
 
-#cv2.rectangle(img, (0, 0), (380, 218), (255, 0, 0,), 2)
+# cv2.rectangle(img, (0, 0), (380, 218), (255, 0, 0,), 2)
 
 
 # Detect faces

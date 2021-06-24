@@ -1,4 +1,5 @@
 import cv2
+import math
 
 # Load the cascade
 face_cascade = cv2.CascadeClassifier('HS.xml')
@@ -15,13 +16,30 @@ def distance_from_camera(known_width, focal_length, per_width):
 
 KNOWN_WIDTH = 16.0
 KNOWN_DISTANCE = 25.0
+
 F = (350 * 29) / 16
+font = cv2.FONT_HERSHEY_SIMPLEX
 
 
 def get_distance_from_faces(frame, faces):
     for (x, y, w, h) in faces:
         for (x2, y2, w2, h2) in faces:
+
             cv2.line(frame, (x, y), (x2, y2), (100, 100, 0), 2)
+            # draw lines
+            if (x == x2 and y == y2):
+                continue
+
+            cv2.line(frame, (x, y), (x2, y2), (100, 100, 0), 2)
+            pixel_distance = math.sqrt(math.sqrt(((x2-x)**2)+((y2-y)**2)))
+            print(pixel_distance)
+            cv2.putText(frame,
+                        str(pixel_distance),
+                        (x, y),
+                        font, 1,
+                        (0, 255, 255),
+                        2,
+                        cv2.LINE_4)
     return 0
 
 
@@ -36,7 +54,6 @@ while True:
     # Draw the rectangle around each face
     x_value = 0
     y_value = 0
-    font = cv2.FONT_HERSHEY_SIMPLEX
     for (x, y, w, h) in faces:
         focal_length = float(w) * float(KNOWN_DISTANCE) / float(KNOWN_WIDTH)
         cv2.rectangle(img, (x, y), (x+w, y+h), (100, 100, 0), 2)
@@ -51,6 +68,7 @@ while True:
                     (0, 255, 255),
                     2,
                     cv2.LINE_4)
+
 
     # Display
     cv2.imshow('img', img)

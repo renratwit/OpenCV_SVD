@@ -28,7 +28,7 @@ def get_distance_from_faces(frame, faces):
             if (x == x2 and y == y2):
                 continue
             pixel_distance = math.sqrt(math.sqrt(((x2-x)**2)+((y2-y)**2)))
-            print(pixel_distance)
+            # print(pixel_distance)
             # cv2.putText(frame,
             #             str(pixel_distance),
             #             (x, y),
@@ -42,7 +42,7 @@ def get_distance_from_faces(frame, faces):
 while True:
     # Read the frame
     _, img = cap.read()
-    img = cv2.imread('couple.jpg')
+    img = cv2.imread('Group_Photo.jpg')
     # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # Detect the faces
@@ -91,5 +91,11 @@ while True:
     k = cv2.waitKey(30) & 0xff
     if k == 27:
         break
+    elif k % 256 == 32:
+        # SPACE pressed
+        img_name = "opencv_frame_{}.png".format(1)
+        cv2.imwrite(img_name, img)
+        print("{} written!".format(img_name))
+
 # Release the VideoCapture object
 cap.release()

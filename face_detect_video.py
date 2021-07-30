@@ -1,5 +1,6 @@
 import cv2
 import math
+from face import Face
 
 # Load the cascade
 face_cascade = cv2.CascadeClassifier('HS.xml')
@@ -28,25 +29,20 @@ def get_distance_from_faces(frame, faces):
             if (x == x2 and y == y2):
                 continue
             pixel_distance = math.sqrt(math.sqrt(((x2-x)**2)+((y2-y)**2)))
-            # print(pixel_distance)
-            # cv2.putText(frame,
-            #             str(pixel_distance),
-            #             (x, y),
-            #             font, 1,
-            #             (0, 255, 255),
-            #             2,
-            #             cv2.LINE_4)
     return 0
 
 
 while True:
     # Read the frame
     _, img = cap.read()
-    img = cv2.imread('Group_Photo.jpg')
+    # img = cv2.imread('Group_Photo.jpg')
     # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # Detect the faces
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    face_list = []
+    for (x, y, w, h) in face_list:
+        face_list.append(Face(x, y, w, h))
     get_distance_from_faces(img, faces)
 
     # Draw the rectangle around each face AND do other things :)

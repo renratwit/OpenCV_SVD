@@ -35,7 +35,7 @@ def get_distance_from_faces(frame, faces):
 while True:
     # Read the frame
     _, img = cap.read()
-    img = cv2.imread('Group_Photo.jpg')
+    # img = cv2.imread('Group_Photo.jpg')
     # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # Detect the faces

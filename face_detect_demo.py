@@ -56,6 +56,8 @@ def detect(n, d, c):
 
     # Convert into grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.blur(gray, (3, 3))
+    # cv2.imshow("Blur", gray)
 
     def draw_lines_again(frame, face_list):
         for f in face_list:
@@ -159,11 +161,11 @@ lbl = Label(root)
 lbl.pack()
 
 Label(
-    root, text="Minimal Distance (inches) [Default = 20 inches]", pady=20).pack()
+    root, text="Minimal Distance (inches) [Default = 50 inches]", pady=20).pack()
 input = Entry(root)
 input.pack()
 
-Label(root, text="Color Threshold [Default = 50]", pady=20).pack()
+Label(root, text="Color Threshold [Default = 20]", pady=20).pack()
 input2 = Entry(root)
 input2.pack()
 

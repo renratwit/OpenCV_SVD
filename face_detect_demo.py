@@ -5,38 +5,25 @@ import numpy as np
 from tkinter import *
 from tkinter import filedialog
 import tkinter as tk
-from PIL import Image, ImageTk
 
 # Load the cascade
 face_cascade = cv2.CascadeClassifier('HS.xml')
 head_cascade = cv2.CascadeClassifier('face_front.xml')
 
-# Take from webcam
-# cam = cv2.VideoCapture(0)
-# cv2.namedWindow("Input")
 
-# while True:
-#     ret, frame = cam.read()
+def detect(n, d, c):
+    print("D " + d)
+    print("C " + c)
 
-#     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-#     HS = face_cascade.detectMultiScale(gray, 1.1, 4)
-#     for (x, y, w, h) in HS:
-#         cv2.rectangle(frame, (x, y), (x+w, y+h), (100, 100, 0), 2)
-#     cv2.imshow("Input", frame)
-#     k = cv2.waitKey(1)
-#     if k % 256 == 27:
-#         print("Closing...")
-#         break
-#     elif k % 256 == 32:
-#         img_name = "OpenCV_Input.png"
-#         cv2.imwrite("./pictures/openCV_Input.png", frame)
-#         break
+    if c is '':
+        c = 20
 
-# cam.release()
-######
+    if d is '':
+        d = 50
 
+    input_distance = int(d)
+    input_color_threshold = int(c)
 
-def detect(n):
     img = ''
 
     if n == 1:
@@ -80,7 +67,7 @@ def detect(n):
                 dist = math.sqrt((f.x - f2.x)**2 + (f.y - f2.y)**2)
                 inches = (dist / f2.w) * 16
                 print("DIST: ", str(inches))
-                if inches <= 50:
+                if inches <= input_distance:
                     cv2.line(frame, center_1, center_2, (0, 0, 255), 2)
         return 0
 
@@ -131,7 +118,7 @@ def detect(n):
             #cv2.imshow(str(x), bottom_matrix)
 
             color_ratio = compareColorAverage(top_matrix, bottom_matrix)
-            if color_ratio <= 20:
+            if color_ratio <= input_color_threshold:
                 face.isMask = True
             else:
                 face.isMask = False
@@ -144,13 +131,13 @@ def detect(n):
             box_color = (0, 0, 255)
         cv2.rectangle(img, (f.x, f.y), (f.x_end, f.y_end), box_color, 2)
         # Display distance from camera
-        # cv2.putText(img,
-        #             str(f.est_dist),
-        #             (f.x, f.y),
-        #             f.font, 1,
-        #             (0, 255, 0),
-        #             2,
-        #             cv2.LINE_4)
+        cv2.putText(img,
+                    str(f.est_dist),
+                    (f.x, f.y),
+                    f.font, 1,
+                    (0, 255, 0),
+                    2,
+                    cv2.LINE_4)
 
     draw_lines_again(img, face_list)
 
@@ -171,15 +158,28 @@ frm.pack(side=BOTTOM, padx=15, pady=15)
 lbl = Label(root)
 lbl.pack()
 
-btn = Button(frm, text="Upload Image", command=lambda: detect(1))
+Label(
+    root, text="Minimal Distance (inches) [Default = 20 inches]", pady=20).pack()
+input = Entry(root)
+input.pack()
+
+Label(root, text="Color Threshold [Default = 50]", pady=20).pack()
+input2 = Entry(root)
+input2.pack()
+
+Label(root, text="Allow box to focus on subject and use Spacebar to take picture", pady=50).pack()
+
+btn = Button(frm, text="Upload Image",
+             command=lambda: detect(1, input.get(), input2.get()))
 btn.pack(side=tk.LEFT)
 
-btn3 = Button(frm, text="Upload from webcam", command=lambda: detect(0))
+btn3 = Button(frm, text="Upload from webcam",
+              command=lambda: detect(0, input.get(), input2.get()))
 btn3.pack(side=tk.LEFT, padx=10)
 
 btn2 = Button(frm, text="Exit", command=lambda: exit())
 btn2.pack(side=tk.LEFT, padx=10)
 
-root.title("Image Browser")
-root.geometry("300x350")
+root.title("SVI with Images")
+root.geometry("350x350")
 root.mainloop()
